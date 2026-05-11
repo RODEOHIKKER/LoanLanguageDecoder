@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LoanLingo — Loan Language Decoder</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <style>
 :root {
   --navy: #0d1b2a;
@@ -836,6 +837,7 @@ textarea:focus { border-color: rgba(232,184,75,0.4); }
 </div>
 
 <script>
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
 let selectedFile = null;
 let currentClauses = [];
@@ -881,6 +883,20 @@ dropZone.addEventListener('drop', e => {
   else showError('Please drop a PDF file.');
 });
 
+// ── PDF TEXT EXTRACTION ──
+async function extractTextFromPDF(file) {
+  const arrayBuffer = await file.arrayBuffer();
+  const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+  let fullText = '';
+  for (let i = 1; i <= pdf.numPages; i++) {
+    const page = await pdf.getPage(i);
+    const content = await page.getTextContent();
+    const pageText = content.items.map(item => item.str).join(' ');
+    fullText += pageText + '\n';
+  }
+  return fullText;
+}
+
 // ── PROMPT BUILDER ──
 function buildSystemPrompt(language) {
   return `You are a legal plain-language assistant for low-income Indian borrowers who have no financial or legal background.
@@ -906,23 +922,18 @@ Do NOT add any text before or after the JSON array.
 Start your response with [ and end with ].`;
 }
 
-// ── SECURE API CALL → Flask (PDF as file upload, text as JSON) ──
-async function callGemini(text, language, pdfFile) {
-  let response;
-  if (pdfFile) {
-    const formData = new FormData();
-    formData.append('pdf', pdfFile);
-    formData.append('language', language);
-    response = await fetch('/api/analyze', { method: 'POST', body: formData });
-  } else {
-    response = await fetch('/api/analyze', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ text, language })
-    });
-  }
+// ── GEMINI API CALL ──
+async function callGemini(text, language) {
+  const response = await fetch('/api/analyze', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ text, language })
+  });
+
   const data = await response.json();
-  if (!response.ok || data.error) throw new Error(data.error || `Server error ${response.status}`);
+  if (!response.ok || data.error) {
+    throw new Error(data.error || `Server error ${response.status}`);
+  }
   return data.result;
 }
 
@@ -1041,23 +1052,37 @@ function setLoading(on) {
 
 // ── MAIN ANALYSIS ──
 async function runAnalysis() {
-  const pastedText = document.getElementById('loanText').value.trim();
-  const language = document.getElementById('langSelect').value;
+  let text = document.getElementById('loanText').value.trim();
 
-  if (!selectedFile && !pastedText) {
+  if (selectedFile) {
+    setLoading(true);
+    try {
+      text = await extractTextFromPDF(selectedFile);
+      if (!text || text.trim().length < 50) {
+        showError('Could not extract text from this PDF. Try a digital (not scanned) PDF, or paste the text below.');
+        setLoading(false);
+        return;
+      }
+    } catch (e) {
+      showError('PDF extraction failed: ' + e.message);
+      setLoading(false);
+      return;
+    }
+  } else if (!text) {
     showError('Please upload a PDF or paste loan document text.');
     return;
   }
 
+  const language = document.getElementById('langSelect').value;
   setLoading(true);
 
   try {
-    // Pass PDF file directly to Flask — server extracts text with pypdf
-    const raw = await callGemini(pastedText, language, selectedFile || null);
+    const raw = await callGemini(text, language);
     const clauses = parseResponse(raw);
 
     if (!clauses || !Array.isArray(clauses) || clauses.length === 0) {
       showError('Analysis failed — could not parse AI response. Please try again.');
+      setLoading(false);
       return;
     }
 
@@ -1073,14 +1098,21 @@ async function runAnalysis() {
 // ── LANGUAGE RE-ANALYSIS ──
 document.getElementById('langSelect').addEventListener('change', async function() {
   if (currentClauses.length === 0) return;
-  const pastedText = document.getElementById('loanText').value.trim();
-  if (!pastedText && !selectedFile) return;
+  const text = document.getElementById('loanText').value.trim();
+  if (!text && !selectedFile) return;
 
   const language = this.value;
   setLoading(true);
 
+  let docText = text;
+  if (selectedFile && !docText) {
+    docText = await extractTextFromPDF(selectedFile).catch(() => '');
+  }
+
+  if (!docText) { setLoading(false); return; }
+
   try {
-    const raw = await callGemini(pastedText, language, selectedFile || null);
+    const raw = await callGemini(docText, language);
     const clauses = parseResponse(raw);
     if (clauses && clauses.length > 0) {
       currentClauses = clauses;
