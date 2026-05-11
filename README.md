@@ -1,1 +1,2 @@
 # LoanLanguageDecoder
+Analyses loan documents
