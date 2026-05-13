@@ -1,0 +1,178 @@
+{
+  "personal_loan": {
+    "interest_rate": {
+      "min": 8.75,
+      "max": 18.00,
+      "typical_low": 9.99,
+      "typical_high": 14.00,
+      "predatory_threshold": 24.00,
+      "sources": [
+        { "lender": "Bank of Maharashtra", "rate": "8.75-13.55" },
+        { "lender": "Union Bank of India", "rate": "8.75-12.55" },
+        { "lender": "Mahindra Finance", "rate": "8.00-25.00" },
+        { "lender": "Canara Bank", "rate": "9.70-15.15" },
+        { "lender": "Punjab & Sind Bank", "rate": "9.60-13.85" },
+        { "lender": "HSBC Bank", "rate": "9.75 onwards" },
+        { "lender": "Kotak Mahindra Bank", "rate": "9.98 onwards" },
+        { "lender": "Axis Bank", "rate": "9.99 onwards" },
+        { "lender": "HDFC Bank", "rate": "9.99 onwards" },
+        { "lender": "ICICI Bank", "rate": "9.99 onwards" },
+        { "lender": "IDFC FIRST Bank", "rate": "9.99 onwards" },
+        { "lender": "Poonawalla Fincorp", "rate": "9.99 onwards" },
+        { "lender": "Bajaj Finance", "rate": "10.00-30.00" },
+        { "lender": "Central Bank of India", "rate": "9.85-11.65" },
+        { "lender": "UCO Bank", "rate": "9.95-13.20" },
+        { "lender": "Bank of Baroda", "rate": "10.15-18.00" },
+        { "lender": "IndusInd Bank", "rate": "10.35 onwards" },
+        { "lender": "Indian Overseas Bank", "rate": "10.25 onwards" },
+        { "lender": "Punjab National Bank", "rate": "10.25-16.80" },
+        { "lender": "Bank of India", "rate": "10.85-16.15" },
+        { "lender": "Aditya Birla Finance", "rate": "10.99 onwards" },
+        { "lender": "Tata Capital", "rate": "10.99 onwards" },
+        { "lender": "L&T Finance", "rate": "11.00 onwards" },
+        { "lender": "Shriram Finance", "rate": "11.00 onwards" },
+        { "lender": "Federal Bank", "rate": "12.00-22.50" },
+        { "lender": "IIFL Finance", "rate": "12.00-28.00" },
+        { "lender": "Piramal Finance", "rate": "12.14 onwards" },
+        { "lender": "Muthoot Finance", "rate": "13.50 onwards" },
+        { "lender": "Dhani Loans", "rate": "13.99 onwards" },
+        { "lender": "Moneyview", "rate": "14.00 onwards" },
+        { "lender": "Cholamandalam IFC", "rate": "10.00-28.00" },
+        { "lender": "HDB Financial Services", "rate": "10.00-35.00" },
+        { "lender": "Hero Fincorp", "rate": "up to 30" },
+        { "lender": "Mannapuram Finance", "rate": "18.00-24.00" }
+      ]
+    },
+    "processing_fee": {
+      "low_percent": 0.5,
+      "typical_percent": 2.0,
+      "high_percent": 3.93,
+      "predatory_threshold": 5.0,
+      "sources": [
+        { "lender": "Canara Bank", "fee": "up to 0.5% (max Rs 5000)" },
+        { "lender": "Bank of Maharashtra", "fee": "up to 1% (max Rs 10,000)" },
+        { "lender": "Bank of India", "fee": "up to 1% (min Rs 250; max Rs 15,000)" },
+        { "lender": "Central Bank of India", "fee": "up to 1%" },
+        { "lender": "Indian Overseas Bank", "fee": "up to 0.75%" },
+        { "lender": "Punjab & Sind Bank", "fee": "0.50%-1%" },
+        { "lender": "Punjab National Bank", "fee": "up to 1%" },
+        { "lender": "Union Bank of India", "fee": "up to 1% (max Rs 7,500)" },
+        { "lender": "UCO Bank", "fee": "up to 1% (min Rs 750)" },
+        { "lender": "Axis Bank", "fee": "up to 2%" },
+        { "lender": "Federal Bank", "fee": "up to 2%" },
+        { "lender": "HSBC Bank", "fee": "up to 2%" },  
+        { "lender": "ICICI Bank", "fee": "up to 2%" },
+        { "lender": "IDFC FIRST Bank", "fee": "up to 2%" },
+        { "lender": "Mahindra Finance", "fee": "2% or Rs 5,000 whichever lower" },
+        { "lender": "Mannapuram Finance", "fee": "1% of loan amount" },
+        { "lender": "Hero Fincorp", "fee": "2.3%-3%" },
+        { "lender": "L&T Finance", "fee": "up to 3%" },
+        { "lender": "Poonawalla Fincorp", "fee": "up to 3%" },
+        { "lender": "Tata Capital", "fee": "up to 3.5%" },
+        { "lender": "IndusInd Bank", "fee": "up to 3.5%" },
+        { "lender": "Bajaj Finance", "fee": "up to 3.93%" },
+        { "lender": "Dhani Loans", "fee": "3% onwards" },
+        { "lender": "Moneyview", "fee": "2% onwards" },
+        { "lender": "Kotak Mahindra Bank", "fee": "up to 5%" },
+        { "lender": "Shriram Finance", "fee": "up to 5%" },
+        { "lender": "Piramal Finance", "fee": "up to 5%" },
+        { "lender": "HDB Financial Services", "fee": "up to 5.90%" },
+        { "lender": "Cholamandalam IFC", "fee": "4%-6%" },
+        { "lender": "IIFL Finance", "fee": "2%-9%" },
+        { "lender": "HDFC Bank", "fee": "up to Rs 6,500" },
+        { "lender": "Muthoot Finance", "fee": "varies per application" }
+      ]
+    },
+    "additional_interest_rate": {
+      "typical_percent": 2.0,
+      "high_percent": 3.0,
+      "predatory_threshold": 24.0,
+      "note": "Additional/penal interest charged on overdue amounts. RBI guidelines cap penal charges — they should not be compounding in nature."
+    },
+    "prepayment": {
+      "typical_lock_in_months": 6,
+      "high_lock_in_months": 12,
+      "typical_charge_percent": 2.0,
+      "high_charge_percent": 4.0,
+      "note": "RBI mandates no prepayment penalty on floating rate loans. Fixed rate loans may have charges."
+    },
+    "risk_pattern_penalties": {
+      "variable_interest_without_cap": {
+        "score_deduction": 15,
+        "description": "Lender can raise interest rate at any time without a stated upper limit"
+      },
+      "daily_compounding": {
+        "score_deduction": 20,
+        "description": "Interest compounds daily — debt escalates very quickly after a missed payment"
+      },
+      "aggressive_recovery": {
+        "score_deduction": 15,
+        "description": "Wording allows lender to take legal or recovery action without prior notice"
+      },
+      "unilateral_lender_power": {
+        "score_deduction": 15,
+        "description": "Lender can modify terms, demand security, or accelerate repayment at sole discretion"
+      },
+      "data_sharing_without_limit": {
+        "score_deduction": 5,
+        "description": "Borrower data can be shared with third parties beyond credit bureaus"
+      },
+      "no_grace_period": {
+        "score_deduction": 10,
+        "description": "Default penalties apply immediately with no grace period after missed payment"
+      },
+      "no_notice_on_default": {
+        "score_deduction": 10,
+        "description": "Lender not required to notify borrower before declaring default or taking action"
+      },
+      "broad_indemnity": {
+        "score_deduction": 10,
+        "description": "Borrower must cover lender's legal costs and losses in almost any scenario"
+      },
+      "statement_conclusive": {
+        "score_deduction": 10,
+        "description": "Bank's statement of account is treated as final — borrower cannot dispute it"
+      },
+      "loan_transfer_without_consent": {
+        "score_deduction": 10,
+        "description": "Lender can sell or transfer the loan to any third party without telling the borrower"
+      },
+      "security_demand_on_unsecured_loan": {
+        "score_deduction": 15,
+        "description": "Loan marketed as unsecured but lender can demand collateral at any time"
+      },
+      "increased_cost_transfer": {
+        "score_deduction": 10,
+        "description": "Any regulatory cost increases are passed directly to the borrower"
+      }
+    },
+    "scoring": {
+      "starting_score": 100,
+      "interest_rate_thresholds": [
+        { "above": 24.0, "deduction": 25 },
+        { "above": 18.0, "deduction": 15 },
+        { "above": 14.0, "deduction": 5  }
+      ],
+      "processing_fee_thresholds": [
+        { "above": 5.0, "deduction": 15 },
+        { "above": 3.93, "deduction": 10 },
+        { "above": 2.0,  "deduction": 5  }
+      ],
+      "additional_interest_thresholds": [
+        { "above": 24.0, "deduction": 15 },
+        { "above": 12.0, "deduction": 8  },
+        { "above": 3.0,  "deduction": 3  }
+      ],
+      "prepayment_lock_in_thresholds": [
+        { "above_months": 12, "deduction": 10 },
+        { "above_months": 6,  "deduction": 5  }
+      ],
+      "classifications": [
+        { "min": 80, "max": 100, "label": "Borrower Friendly",    "color": "green"  },
+        { "min": 60, "max": 79,  "label": "Moderate Risk",        "color": "yellow" },
+        { "min": 40, "max": 59,  "label": "High Risk",            "color": "orange" },
+        { "min": 0,  "max": 39,  "label": "Potentially Predatory","color": "red"    }
+      ]
+    }
+  }
+}
