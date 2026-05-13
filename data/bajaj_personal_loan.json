@@ -1,0 +1,85 @@
+{
+  "clauses": [
+    {
+      "clause": "Interest Rate Reset (Clause 4.1)",
+      "explanation": "Interest rate is floating and may be revised quarterly based on the lender's internal benchmark. You will be notified by SMS or email 7 days prior.",
+      "reason": "Rate can change but notice is given. The 7-day window is short but better than no notice at all.",
+      "risk": "yellow"
+    },
+    {
+      "clause": "Prepayment Lock-in (Clause 6.1)",
+      "explanation": "No prepayment is allowed for the first 12 months. After that, a prepayment charge of 4% applies on the outstanding principal.",
+      "reason": "12-month lock-in and 4% prepayment fee are above market average. Limits your ability to refinance if you find a better rate.",
+      "risk": "red"
+    },
+    {
+      "clause": "Penal Interest (Clause 7.2)",
+      "explanation": "Penal interest of 3% per month applies on overdue amounts from the date of default, compounded monthly.",
+      "reason": "3% per month is 36% annualised — significantly above standard. Monthly compounding makes this escalate very fast.",
+      "risk": "red"
+    },
+    {
+      "clause": "Default Trigger (Clause 9.3)",
+      "explanation": "A default is triggered if any EMI is overdue by more than 3 days. No prior notice is required before the default is recorded.",
+      "reason": "3-day trigger with no grace period is aggressive. A single delayed NACH debit can put you in default.",
+      "risk": "red"
+    },
+    {
+      "clause": "Data Sharing (Clause 13.1)",
+      "explanation": "You consent to sharing your financial and personal data with group companies, credit bureaus, and third-party analytics partners.",
+      "reason": "Broad but standard for NBFCs. Worth knowing your data will be shared beyond the lender.",
+      "risk": "yellow"
+    },
+    {
+      "clause": "Foreclosure Process (Clause 10.2)",
+      "explanation": "In case of default, the lender will issue a 15-day notice before initiating recovery. You may cure the default within this period.",
+      "reason": "15-day cure window is short but present. Better than no-notice enforcement.",
+      "risk": "yellow"
+    }
+  ],
+  "extracted": {
+    "additional_interest_percent": 36,
+    "interest_rate": 13.5,
+    "loan_type": "personal_loan",
+    "prepayment_lockin_months": 12,
+    "processing_fee_percent": 2.5,
+    "risk_patterns": {
+      "aggressive_recovery": true,
+      "broad_indemnity": false,
+      "daily_compounding": false,
+      "data_sharing_without_limit": true,
+      "increased_cost_transfer": false,
+      "loan_transfer_without_consent": false,
+      "no_grace_period": true,
+      "no_notice_on_default": true,
+      "security_demand_on_unsecured_loan": false,
+      "statement_conclusive": false,
+      "unilateral_lender_power": false,
+      "variable_interest_without_cap": true
+    }
+  },
+  "fairness": {
+    "classification": {
+      "color": "yellow",
+      "label": "Use Caution",
+      "max": 74,
+      "min": 40
+    },
+    "fairness_score": 44,
+    "major_risks": [
+      "Prepayment locked for 12 months — you cannot refinance even if rates drop",
+      "Penal interest at 36% annualised compounds monthly — debt can spiral fast",
+      "Default triggered after just 3 days overdue with no prior warning"
+    ],
+    "market_comparison": {
+      "interest_rate": {
+        "loan_value": 13.5,
+        "typical_range": "11.0-16.0%"
+      },
+      "processing_fee": {
+        "loan_value": 2.5,
+        "typical_range": "0-3.0%"
+      }
+    }
+  }
+}

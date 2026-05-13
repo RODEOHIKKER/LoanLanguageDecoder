@@ -94,6 +94,18 @@
     </button>
     <input type="file" id="fileInput" accept=".pdf">
   </div>
+  <div class="demo-bar">
+  <span class="demo-label">Try a sample:</span>
+  <button class="demo-btn red" onclick="loadDemo('sbm_home_loan')">
+    🔴 SBM Bank — Home Loan
+  </button>
+  <button class="demo-btn yellow" onclick="loadDemo('bajaj_personal_loan')">
+    🟡 Bajaj Finserv — Personal Loan
+  </button>
+  <button class="demo-btn green" onclick="loadDemo('hdfc_home_loan')">
+    🟢 HDFC — Home Loan
+  </button>
+</div>
 
   <!-- FILE PREVIEW -->
   <div class="file-preview" id="filePreview">
@@ -213,6 +225,104 @@
 
     <!-- CLAUSE CARDS -->
     <div id="clauseCards"></div>
+
+  </div>
+
+  <!-- EMI CALCULATOR -->
+  <div class="calc-section" id="calcSection">
+
+    <div class="clauses-header">
+      <h3>EMI & Cost Calculator</h3>
+      <span class="clause-count">Compare two loans side by side</span>
+    </div>
+
+    <div class="calc-grid">
+
+      <div class="calc-card">
+        <div class="calc-card-title">🔴 Loan A</div>
+        <div class="calc-field">
+          <label>Principal (₹)</label>
+          <input type="number" id="calcPrincipalA" placeholder="e.g. 4000000" />
+        </div>
+        <div class="calc-field">
+          <label>Interest Rate (% per year)</label>
+          <input type="number" id="calcRateA" placeholder="e.g. 12.5" step="0.01" />
+        </div>
+        <div class="calc-field">
+          <label>Tenure (years)</label>
+          <input type="number" id="calcTenureA" placeholder="e.g. 20" />
+        </div>
+      </div>
+
+      <div class="calc-card">
+        <div class="calc-card-title">🟢 Loan B</div>
+        <div class="calc-field">
+          <label>Principal (₹)</label>
+          <input type="number" id="calcPrincipalB" placeholder="e.g. 4000000" />
+        </div>
+        <div class="calc-field">
+          <label>Interest Rate (% per year)</label>
+          <input type="number" id="calcRateB" placeholder="e.g. 8.75" step="0.01" />
+        </div>
+        <div class="calc-field">
+          <label>Tenure (years)</label>
+          <input type="number" id="calcTenureB" placeholder="e.g. 20" />
+        </div>
+      </div>
+
+    </div>
+
+    <button class="analyze-btn" style="margin-top:16px" onclick="runCalc()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+        <rect x="4" y="2" width="16" height="20" rx="2"/>
+        <line x1="8" y1="10" x2="16" y2="10"/>
+        <line x1="8" y1="14" x2="16" y2="14"/>
+        <line x1="8" y1="18" x2="12" y2="18"/>
+      </svg>
+      Calculate & Compare
+    </button>
+
+    <div class="calc-results" id="calcResults" style="display:none">
+
+      <div class="calc-result-grid">
+
+        <div class="calc-result-card loan-a">
+          <div class="calc-result-title">Loan A</div>
+          <div class="calc-result-row">
+            <span>Monthly EMI</span>
+            <span id="emiA" class="calc-result-val">—</span>
+          </div>
+          <div class="calc-result-row">
+            <span>Total Amount Paid</span>
+            <span id="totalA" class="calc-result-val">—</span>
+          </div>
+          <div class="calc-result-row">
+            <span>Total Interest Paid</span>
+            <span id="interestA" class="calc-result-val red-val">—</span>
+          </div>
+        </div>
+
+        <div class="calc-result-card loan-b">
+          <div class="calc-result-title">Loan B</div>
+          <div class="calc-result-row">
+            <span>Monthly EMI</span>
+            <span id="emiB" class="calc-result-val">—</span>
+          </div>
+          <div class="calc-result-row">
+            <span>Total Amount Paid</span>
+            <span id="totalB" class="calc-result-val">—</span>
+          </div>
+          <div class="calc-result-row">
+            <span>Total Interest Paid</span>
+            <span id="interestB" class="calc-result-val green-val">—</span>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="calc-verdict" id="calcVerdict"></div>
+
+    </div>
 
   </div>
 

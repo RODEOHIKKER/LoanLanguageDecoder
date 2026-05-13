@@ -387,6 +387,14 @@ def analyze():
             "error": f"Server error: {str(e)}"
         }), 500
 
+@app.route('/demo/<doc_id>')
+def demo_doc(doc_id):
+    allowed = ['sbm_home_loan', 'hdfc_home_loan', 'bajaj_personal_loan']
+    if doc_id not in allowed:
+        return jsonify({'error': 'not found'}), 404
+    with open(f'data/{doc_id}.json') as f:
+        return jsonify(json.load(f))
+
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)

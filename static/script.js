@@ -12,6 +12,38 @@ const dropZone = document.getElementById('dropZone');
 const fileInput = document.getElementById('fileInput');
 const filePreview = document.getElementById('filePreview');
 
+// ─────────────────────────────────────────────
+// DEMO DOCS
+// ─────────────────────────────────────────────
+
+async function loadDemo(docId) {
+  clearAll();
+  setLoading(true);
+  
+  // fake processing delay so it feels real
+  await new Promise(r => setTimeout(r, 2000));
+  
+  try {
+    const res = await fetch(`/demo/${docId}`);
+    const result = await res.json();
+    
+    const clauses = Array.isArray(result.clauses) ? result.clauses : [];
+    const fairness = result.fairness ?? {
+      fairness_score: 0,
+      classification: { label: 'Unknown' },
+      market_comparison: { interest_rate: {}, processing_fee: {} },
+      major_risks: []
+    };
+    
+    currentClauses = clauses;
+    renderResults(clauses, fairness);
+  } catch(e) {
+    showError('Could not load demo document.');
+  } finally {
+    setLoading(false);
+  }
+}
+
 function formatSize(b) {
   if (b < 1024) return b + ' B';
   if (b < 1048576) return Math.round(b / 1024) + ' KB';
@@ -401,4 +433,62 @@ function clearAll() {
   document.getElementById('resultsSection').style.display = 'none';
   document.getElementById('errorToast').style.display = 'none';
   currentClauses = [];
+}
+
+// ─────────────────────────────────────────────
+// EMI CALCULATOR
+// ─────────────────────────────────────────────
+
+function calcEMI(principal, annualRate, years) {
+  const r = annualRate / 100 / 12;
+  const n = years * 12;
+  if (r === 0) return principal / n;
+  return principal * r * Math.pow(1 + r, n) / (Math.pow(1 + r, n) - 1);
+}
+
+function formatRupees(amount) {
+  if (amount >= 10000000) return '₹' + (amount / 10000000).toFixed(2) + ' Cr';
+  if (amount >= 100000)   return '₹' + (amount / 100000).toFixed(2) + ' L';
+  return '₹' + Math.round(amount).toLocaleString('en-IN');
+}
+
+function runCalc() {
+  const pA = parseFloat(document.getElementById('calcPrincipalA').value);
+  const rA = parseFloat(document.getElementById('calcRateA').value);
+  const tA = parseFloat(document.getElementById('calcTenureA').value);
+
+  const pB = parseFloat(document.getElementById('calcPrincipalB').value);
+  const rB = parseFloat(document.getElementById('calcRateB').value);
+  const tB = parseFloat(document.getElementById('calcTenureB').value);
+
+  if ([pA,rA,tA,pB,rB,tB].some(isNaN)) {
+    showError('Please fill in all fields in the calculator.');
+    return;
+  }
+
+  const emiA = calcEMI(pA, rA, tA);
+  const emiB = calcEMI(pB, rB, tB);
+
+  const totalA    = emiA * tA * 12;
+  const totalB    = emiB * tB * 12;
+  const interestA = totalA - pA;
+  const interestB = totalB - pB;
+
+  document.getElementById('emiA').textContent      = formatRupees(emiA);
+  document.getElementById('totalA').textContent    = formatRupees(totalA);
+  document.getElementById('interestA').textContent = formatRupees(interestA);
+
+  document.getElementById('emiB').textContent      = formatRupees(emiB);
+  document.getElementById('totalB').textContent    = formatRupees(totalB);
+  document.getElementById('interestB').textContent = formatRupees(interestB);
+
+  const diff = Math.abs(interestA - interestB);
+  const cheaper = interestA < interestB ? 'Loan A' : 'Loan B';
+  const dearer  = interestA < interestB ? 'Loan B' : 'Loan A';
+
+  document.getElementById('calcVerdict').innerHTML =
+    `<strong>${cheaper}</strong> saves you <strong class="gold">${formatRupees(diff)}</strong> in total interest compared to ${dearer}.`;
+
+  document.getElementById('calcResults').style.display = 'block';
+  document.getElementById('calcResults').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
