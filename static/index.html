@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LoanLingo — Loan Language Decoder</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app">
+
+  <!-- HEADER -->
+  <header>
+    <div class="logo">
+      <!-- SVG Logo -->
+      <svg class="logo-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="48" height="48" rx="14" fill="rgba(232,184,75,0.1)"/>
+        <rect x="0.5" y="0.5" width="47" height="47" rx="13.5" stroke="rgba(232,184,75,0.3)"/>
+        <!-- Document shape -->
+        <rect x="11" y="8" width="20" height="26" rx="3" fill="#1a2e45" stroke="rgba(232,184,75,0.4)" stroke-width="1.2"/>
+        <!-- Folded corner -->
+        <path d="M27 8 L31 12 L27 12 Z" fill="rgba(232,184,75,0.25)" stroke="rgba(232,184,75,0.4)" stroke-width="0.8"/>
+        <!-- Text lines -->
+        <line x1="14.5" y1="16" x2="27.5" y2="16" stroke="rgba(232,184,75,0.5)" stroke-width="1.2" stroke-linecap="round"/>
+        <line x1="14.5" y1="19.5" x2="27.5" y2="19.5" stroke="rgba(232,184,75,0.3)" stroke-width="1.2" stroke-linecap="round"/>
+        <line x1="14.5" y1="23" x2="23" y2="23" stroke="rgba(232,184,75,0.3)" stroke-width="1.2" stroke-linecap="round"/>
+        <!-- Magnifier -->
+        <circle cx="32" cy="34" r="8" fill="#0d1b2a" stroke="rgba(232,184,75,0.3)" stroke-width="1"/>
+        <circle cx="30.5" cy="32.5" r="4" fill="none" stroke="var(--gold)" stroke-width="1.5"/>
+        <line x1="33.3" y1="35.3" x2="36" y2="38" stroke="var(--gold)" stroke-width="1.8" stroke-linecap="round"/>
+        <!-- Sparkle inside magnifier -->
+        <circle cx="30.5" cy="32.5" r="1.2" fill="rgba(232,184,75,0.4)"/>
+      </svg>
+
+      <div class="logo-name">
+        <span>LoanLingo</span>
+        <span>Loan Decoder</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-tag">
+      <div class="dot"></div>
+      AI-Powered Legal Clarity
+    </div>
+    <h1>Your loan document,<br><em>finally decoded.</em></h1>
+    <p>Upload any loan agreement PDF or paste your text. We'll break down every clause in plain language — and flag what puts you at risk.</p>
+  </div>
+
+  <!-- CONTROLS ROW -->
+  <div class="controls">
+    <div style="position:relative; flex:1;">
+      <!-- placeholder slot; language select goes here -->
+    </div>
+    <select class="lang-select" id="langSelect">
+      <option value="English">🇬🇧 English</option>
+      <option value="Hindi">🇮🇳 Hindi</option>
+      <option value="Marathi">🏳️ Marathi</option>
+      <option value="Tamil">🏳️ Tamil</option>
+      <option value="Telugu">🏳️ Telugu</option>
+      <option value="Kannada">🏳️ Kannada</option>
+      <option value="Bengali">🏳️ Bengali</option>
+    </select>
+  </div>
+
+  <!-- UPLOAD -->
+  <div class="upload-zone" id="dropZone">
+    <div class="upload-icon-wrap">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+        <polyline points="14 2 14 8 20 8"/>
+        <line x1="12" y1="18" x2="12" y2="12"/>
+        <polyline points="9 15 12 12 15 15"/>
+      </svg>
+    </div>
+    <h3>Drop your loan document here</h3>
+    <p>Drag & drop a PDF file, or click to browse.<br>Works with loan agreements, mortgage docs, credit card terms.</p>
+    <button class="browse-btn" onclick="document.getElementById('fileInput').click()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      Browse PDF file
+    </button>
+    <input type="file" id="fileInput" accept=".pdf">
+  </div>
+
+  <!-- FILE PREVIEW -->
+  <div class="file-preview" id="filePreview">
+    <div class="file-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+    </div>
+    <div class="file-info">
+      <div class="file-name" id="fileName">document.pdf</div>
+      <div class="file-size" id="fileSize"></div>
+    </div>
+    <button class="remove-btn" id="removeBtn" title="Remove file">✕</button>
+  </div>
+
+  <!-- PASTE SECTION -->
+  <div class="paste-section">
+    <div class="section-label">Or paste loan text directly</div>
+    <textarea id="loanText" placeholder="Paste your loan agreement text here… (APR clauses, penalty terms, repayment conditions, etc.)" rows="5"></textarea>
+  </div>
+
+  <!-- ERROR TOAST -->
+  <div class="error-toast" id="errorToast">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><circle cx="12" cy="16" r="1" fill="currentColor"/></svg>
+    <span id="errorMsg">Something went wrong.</span>
+  </div>
+
+  <!-- ANALYZE BUTTON -->
+  <div class="analyze-wrap">
+    <button class="analyze-btn" id="analyzeBtn" onclick="runAnalysis()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+      Decode This Document
+    </button>
+    <button class="clear-btn" onclick="clearAll()">Clear</button>
+  </div>
+
+  <!-- LOADING -->
+  <div class="loading-state" id="loadingState">
+    <div class="spinner"></div>
+    <p class="loading-text" id="loadingText">Reading your document…</p>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="results-section" id="resultsSection">
+    <!-- Overall risk badge -->
+    <div class="risk-badge-wrap">
+      <div class="risk-badge-left">
+        <h2>Overall Document Risk</h2>
+        <p id="riskSubtext">Based on clause analysis</p>
+      </div>
+      <div class="risk-pill" id="overallRiskPill">
+        <span id="riskEmoji">🟢</span>
+        <span id="riskLabel">Analyzing…</span>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="clause-tabs">
+      <button class="tab-btn active" data-tab="red">
+        <span class="tab-dot red"></span>
+        High Risk
+        <span class="tab-badge" id="redCount">0</span>
+      </button>
+      <button class="tab-btn" data-tab="yellow">
+        <span class="tab-dot yellow"></span>
+        Moderate
+        <span class="tab-badge" id="yellowCount">0</span>
+      </button>
+      <button class="tab-btn" data-tab="green">
+        <span class="tab-dot green"></span>
+        Safe
+        <span class="tab-badge" id="greenCount">0</span>
+      </button>
+      <button class="tab-btn" data-tab="all">
+        All
+        <span class="tab-badge" id="clauseCount">0</span>
+      </button>
+    </div>
+
+    <!-- Cards -->
+    <div id="clauseCards"></div>
+  </div>
+
+  <!-- FEATURES -->
+  <div class="features">
+    <div class="feat">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+      APR & interest explained
+    </div>
+    <div class="feat">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+      Hidden fees flagged
+    </div>
+    <div class="feat">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+      Repayment terms simplified
+    </div>
+    <div class="feat">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+      Risk clauses highlighted
+    </div>
+    <div class="feat">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+      7 Indian languages supported
+    </div>
+  </div>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

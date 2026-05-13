@@ -6,6 +6,9 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+print("ENV PATH:", os.path.abspath(".env"))
+print("KEY:", os.getenv("GEMINI_API_KEY"))
+
 app = Flask(__name__, static_folder="static", static_url_path="")
 CORS(app)
 
