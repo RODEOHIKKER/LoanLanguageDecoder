@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LoanLingo — Loan Language Decoder</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="app">
+
+  <!-- HEADER -->
+  <header>
+    <div class="logo">
+      <svg class="logo-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="48" height="48" rx="14" fill="rgba(232,184,75,0.1)"/>
+        <rect x="0.5" y="0.5" width="47" height="47" rx="13.5" stroke="rgba(232,184,75,0.3)"/>
+        <rect x="11" y="8" width="20" height="26" rx="3" fill="#1a2e45" stroke="rgba(232,184,75,0.4)" stroke-width="1.2"/>
+        <path d="M27 8 L31 12 L27 12 Z" fill="rgba(232,184,75,0.25)" stroke="rgba(232,184,75,0.4)" stroke-width="0.8"/>
+        <line x1="14.5" y1="16" x2="27.5" y2="16" stroke="rgba(232,184,75,0.5)" stroke-width="1.2" stroke-linecap="round"/>
+        <line x1="14.5" y1="19.5" x2="27.5" y2="19.5" stroke="rgba(232,184,75,0.3)" stroke-width="1.2" stroke-linecap="round"/>
+        <line x1="14.5" y1="23" x2="23" y2="23" stroke="rgba(232,184,75,0.3)" stroke-width="1.2" stroke-linecap="round"/>
+        <circle cx="32" cy="34" r="8" fill="#0d1b2a" stroke="rgba(232,184,75,0.3)" stroke-width="1"/>
+        <circle cx="30.5" cy="32.5" r="4" fill="none" stroke="var(--gold)" stroke-width="1.5"/>
+        <line x1="33.3" y1="35.3" x2="36" y2="38" stroke="var(--gold)" stroke-width="1.8" stroke-linecap="round"/>
+        <circle cx="30.5" cy="32.5" r="1.2" fill="rgba(232,184,75,0.4)"/>
+      </svg>
+      <div class="logo-name">
+        <span>LoanLingo</span>
+        <span>Borrower Protection System</span>
+      </div>
+    </div>
+    <!-- CONTROLS -->
+  <div class="controls">
+    <div style="position:relative; flex:1;"></div>
+    <select class="lang-select" id="langSelect">
+      <option value="English">🇬🇧 English</option>
+      <option value="Hindi">🇮🇳 Hindi</option>
+      <option value="Marathi">🏳️ Marathi</option>
+      <option value="Tamil">🏳️ Tamil</option>
+      <option value="Telugu">🏳️ Telugu</option>
+      <option value="Kannada">🏳️ Kannada</option>
+      <option value="Bengali">🏳️ Bengali</option>
+    </select>
+  </div>
+  </header>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-tag">
+      <div class="dot"></div>
+      AI-Powered Borrower Risk Analysis
+    </div>
+    <h1>
+      Understand your loan<br>
+      <em>before you sign it.</em>
+    </h1>
+
+  </div>
+
+<br>
+<br>
+
+  <!-- UPLOAD -->
+  <div class="upload-zone" id="dropZone">
+    <div class="upload-icon-wrap">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+        <polyline points="14 2 14 8 20 8"/>
+        <line x1="12" y1="18" x2="12" y2="12"/>
+        <polyline points="9 15 12 12 15 15"/>
+      </svg>
+    </div>
+    <h3>Drop your loan document here</h3>
+    <p>
+      Drag & drop a PDF file or paste loan text directly.<br>
+      Supports personal loans, microfinance agreements,
+      mortgage contracts, and credit terms.
+    </p>
+    <button class="browse-btn" onclick="document.getElementById('fileInput').click()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+        <polyline points="17 8 12 3 7 8"/>
+        <line x1="12" y1="3" x2="12" y2="15"/>
+      </svg>
+      Browse PDF File
+    </button>
+    <input type="file" id="fileInput" accept=".pdf">
+  </div>
+  <div class="demo-bar">
+  <span class="demo-label">Try a sample:</span>
+  <button class="demo-btn red" onclick="loadDemo('sbm_home_loan')">
+    🔴 SBM Bank — Home Loan
+  </button>
+  <button class="demo-btn yellow" onclick="loadDemo('bajaj_personal_loan')">
+    🟡 Bajaj Finserv — Personal Loan
+  </button>
+  <button class="demo-btn green" onclick="loadDemo('hdfc_home_loan')">
+    🟢 HDFC — Home Loan
+  </button>
+</div>
+
+  <!-- FILE PREVIEW -->
+  <div class="file-preview" id="filePreview">
+    <div class="file-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2" stroke-linecap="round">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+        <polyline points="14 2 14 8 20 8"/>
+        <line x1="16" y1="13" x2="8" y2="13"/>
+        <line x1="16" y1="17" x2="8" y2="17"/>
+      </svg>
+    </div>
+    <div class="file-info">
+      <div class="file-name" id="fileName">document.pdf</div>
+      <div class="file-size" id="fileSize"></div>
+    </div>
+    <button class="remove-btn" id="removeBtn" title="Remove file">✕</button>
+  </div>
+
+  <!-- TEXT PASTE -->
+  <div class="paste-section">
+    <div class="section-label">Or paste loan text directly</div>
+    <textarea id="loanText" placeholder="Paste your loan agreement text here…" rows="5"></textarea>
+  </div>
+
+  <!-- ERROR -->
+  <div class="error-toast" id="errorToast">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+      <circle cx="12" cy="12" r="10"/>
+      <line x1="12" y1="8" x2="12" y2="12"/>
+      <circle cx="12" cy="16" r="1" fill="currentColor"/>
+    </svg>
+    <span id="errorMsg">Something went wrong.</span>
+  </div>
+
+  <!-- ACTION BUTTONS -->
+  <div class="analyze-wrap">
+    <button class="analyze-btn" id="analyzeBtn" onclick="runAnalysis()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+      </svg>
+      Analyze Loan Risk
+    </button>
+    <button class="clear-btn" onclick="clearAll()">Clear</button>
+  </div>
+
+  <!-- LOADING -->
+  <div class="loading-state" id="loadingState">
+    <div class="spinner"></div>
+    <p class="loading-text" id="loadingText">Reading your document…</p>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="results-section" id="resultsSection">
+
+    <!-- OVERALL RISK -->
+    <div class="risk-badge-wrap">
+      <div class="risk-badge-left">
+        <h2>Overall Document Risk</h2>
+        <p id="riskSubtext">Based on clause analysis</p>
+      </div>
+      <div class="risk-pill" id="overallRiskPill">
+        <span id="riskEmoji">🟢</span>
+        <span id="riskLabel">Analyzing…</span>
+      </div>
+    </div>
+
+    <!-- STATS -->
+    <div class="clause-stats">
+      <div class="stat-card">
+        <div class="stat-num red" id="redCount">0</div>
+        <div class="stat-label">🔴 High Risk</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num yellow" id="yellowCount">0</div>
+        <div class="stat-label">🟡 Moderate</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num green" id="greenCount">0</div>
+        <div class="stat-label">🟢 Safe</div>
+      </div>
+    </div>
+
+    <!-- FAIRNESS PANEL -->
+    <div class="fairness-panel" id="fairnessPanel">
+
+      <div class="fairness-top">
+        <div>
+          <div class="fairness-heading">Loan Fairness Score</div>
+          <div class="fairness-score">
+            <span id="fairnessNumber">0</span>/100
+          </div>
+          <div class="fairness-label" id="fairnessLabel">Moderate Risk</div>
+        </div>
+      </div>
+
+      <div class="market-info">
+        <div class="market-card">
+          <div class="market-title">Interest Benchmark</div>
+          <div id="interestComparison"></div>
+        </div>
+        <div class="market-card">
+          <div class="market-title">Processing Fee Benchmark</div>
+          <div id="feeComparison"></div>
+        </div>
+      </div>
+
+      <div class="major-risks-title">Major Borrower Risks</div>
+      <div class="major-risks" id="majorRisks"></div>
+
+    </div>
+
+    <!-- CLAUSE HEADER -->
+    <div class="clauses-header">
+      <h3>Clause Breakdown</h3>
+      <span class="clause-count" id="clauseCount">0 clauses</span>
+    </div>
+
+    <!-- CLAUSE CARDS -->
+    <div id="clauseCards"></div>
+
+  </div>
+
+  <!-- EMI CALCULATOR -->
+  <div class="calc-section" id="calcSection">
+
+    <div class="clauses-header">
+      <h3>EMI & Cost Calculator</h3>
+      <span class="clause-count">Compare two loans side by side</span>
+    </div>
+
+    <div class="calc-grid">
+
+      <div class="calc-card">
+        <div class="calc-card-title">🔴 Loan A</div>
+        <div class="calc-field">
+          <label>Principal (₹)</label>
+          <input type="number" id="calcPrincipalA" placeholder="e.g. 4000000" />
+        </div>
+        <div class="calc-field">
+          <label>Interest Rate (% per year)</label>
+          <input type="number" id="calcRateA" placeholder="e.g. 12.5" step="0.01" />
+        </div>
+        <div class="calc-field">
+          <label>Tenure (years)</label>
+          <input type="number" id="calcTenureA" placeholder="e.g. 20" />
+        </div>
+      </div>
+
+      <div class="calc-card">
+        <div class="calc-card-title">🟢 Loan B</div>
+        <div class="calc-field">
+          <label>Principal (₹)</label>
+          <input type="number" id="calcPrincipalB" placeholder="e.g. 4000000" />
+        </div>
+        <div class="calc-field">
+          <label>Interest Rate (% per year)</label>
+          <input type="number" id="calcRateB" placeholder="e.g. 8.75" step="0.01" />
+        </div>
+        <div class="calc-field">
+          <label>Tenure (years)</label>
+          <input type="number" id="calcTenureB" placeholder="e.g. 20" />
+        </div>
+      </div>
+
+    </div>
+
+    <button class="analyze-btn" style="margin-top:16px" onclick="runCalc()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+        <rect x="4" y="2" width="16" height="20" rx="2"/>
+        <line x1="8" y1="10" x2="16" y2="10"/>
+        <line x1="8" y1="14" x2="16" y2="14"/>
+        <line x1="8" y1="18" x2="12" y2="18"/>
+      </svg>
+      Calculate & Compare
+    </button>
+
+    <div class="calc-results" id="calcResults" style="display:none">
+
+      <div class="calc-result-grid">
+
+        <div class="calc-result-card loan-a">
+          <div class="calc-result-title">Loan A</div>
+          <div class="calc-result-row">
+            <span>Monthly EMI</span>
+            <span id="emiA" class="calc-result-val">—</span>
+          </div>
+          <div class="calc-result-row">
+            <span>Total Amount Paid</span>
+            <span id="totalA" class="calc-result-val">—</span>
+          </div>
+          <div class="calc-result-row">
+            <span>Total Interest Paid</span>
+            <span id="interestA" class="calc-result-val red-val">—</span>
+          </div>
+        </div>
+
+        <div class="calc-result-card loan-b">
+          <div class="calc-result-title">Loan B</div>
+          <div class="calc-result-row">
+            <span>Monthly EMI</span>
+            <span id="emiB" class="calc-result-val">—</span>
+          </div>
+          <div class="calc-result-row">
+            <span>Total Amount Paid</span>
+            <span id="totalB" class="calc-result-val">—</span>
+          </div>
+          <div class="calc-result-row">
+            <span>Total Interest Paid</span>
+            <span id="interestB" class="calc-result-val green-val">—</span>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="calc-verdict" id="calcVerdict"></div>
+
+    </div>
+
+  </div>
+
+
+  </div>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,83 @@
+{
+  "clauses": [
+    {
+      "clause": "Interest Rate (Clause 3.1)",
+      "explanation": "Your interest rate is fixed at the time of sanction and linked to the HDFC Retail Prime Lending Rate. Any changes are communicated in writing at least 30 days in advance.",
+      "reason": "Rate changes are transparent and pre-notified, giving you time to plan or refinance.",
+      "risk": "green"
+    },
+    {
+      "clause": "Prepayment (Clause 6.2)",
+      "explanation": "You may prepay any amount at any time after 6 months with no prepayment penalty if the loan is on a floating rate.",
+      "reason": "Standard RBI-compliant prepayment terms. No lock-in on floating rate loans.",
+      "risk": "green"
+    },
+    {
+      "clause": "Default Notice (Clause 9.1)",
+      "explanation": "The bank must issue a written notice and give you 30 days to remedy a default before any recovery action is initiated.",
+      "reason": "You have a meaningful cure window before enforcement. This is borrower-protective.",
+      "risk": "green"
+    },
+    {
+      "clause": "Processing Fee (Clause 2.3)",
+      "explanation": "Processing fee is capped at 1% of the loan amount and is disclosed upfront before disbursement.",
+      "reason": "Transparent, capped, and disclosed. No hidden charges.",
+      "risk": "green"
+    },
+    {
+      "clause": "Loan Transfer (Clause 11.2)",
+      "explanation": "The bank may assign this loan to another entity but must notify you in writing and your terms remain unchanged.",
+      "reason": "Transfer is permitted but your rate and terms are contractually protected.",
+      "risk": "yellow"
+    },
+    {
+      "clause": "Penal Interest (Clause 7.1)",
+      "explanation": "A penal charge of 2% per annum applies on overdue amounts only, calculated on the overdue EMI, not the full outstanding principal.",
+      "reason": "Penal interest is capped, clearly defined, and applied narrowly. Industry standard.",
+      "risk": "green"
+    }
+  ],
+  "extracted": {
+    "additional_interest_percent": 2,
+    "interest_rate": 8.75,
+    "loan_type": "home_loan",
+    "prepayment_lockin_months": 6,
+    "processing_fee_percent": 1.0,
+    "risk_patterns": {
+      "aggressive_recovery": false,
+      "broad_indemnity": false,
+      "daily_compounding": false,
+      "data_sharing_without_limit": false,
+      "increased_cost_transfer": false,
+      "loan_transfer_without_consent": false,
+      "no_grace_period": false,
+      "no_notice_on_default": false,
+      "security_demand_on_unsecured_loan": false,
+      "statement_conclusive": false,
+      "unilateral_lender_power": false,
+      "variable_interest_without_cap": false
+    }
+  },
+  "fairness": {
+    "classification": {
+      "color": "green",
+      "label": "Borrower Friendly",
+      "max": 100,
+      "min": 75
+    },
+    "fairness_score": 82,
+    "major_risks": [
+      "Loan may be transferred to another entity without your consent, though terms are protected"
+    ],
+    "market_comparison": {
+      "interest_rate": {
+        "loan_value": 8.75,
+        "typical_range": "8.5-9.5%"
+      },
+      "processing_fee": {
+        "loan_value": 1.0,
+        "typical_range": "0-2.0%"
+      }
+    }
+  }
+}

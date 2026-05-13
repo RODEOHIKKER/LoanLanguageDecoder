@@ -1,0 +1,99 @@
+{
+  "clauses": [
+    {
+      "clause": "Interest Rate & Default Interest Rate (Definitions and Clause 5.1, 5.3)",
+      "explanation": "The bank decides your normal interest rate and can change it anytime without telling you directly, just by displaying it at the branch. If you miss a payment, the bank will charge you a higher 'Default Interest Rate' and other penal charges without needing to explain why.",
+      "reason": "The bank has complete power to change both the normal and penal interest rates, and you might not be directly informed of these changes. This makes your repayment unpredictable and can lead to significantly higher costs if you default.",
+      "risk": "red"
+    },
+    {
+      "clause": "Fees, Charges, Costs and Claims (Clause 3.1, 3.2)",
+      "explanation": "You have to pay all fees and charges, including taxes, stamp duty, processing fees, login fees, and even costs the bank incurs to enforce security. The bank can directly take these amounts from your loan account.",
+      "reason": "This clause allows the bank to add many charges and expenses to your loan, some of which might be unexpected or difficult to understand. This can increase your overall debt significantly and without your explicit approval for each charge.",
+      "risk": "red"
+    },
+    {
+      "clause": "Bank's Right to Adjust/Set-off (Clause 4.2)",
+      "explanation": "The bank can use money from any of your accounts with them to repay your loan or any other debt you owe, even without telling you first. They will inform you within 2 working days after they do it.",
+      "reason": "This gives the bank sweeping power to take money from any of your accounts to recover dues, potentially leaving you without funds for other essential needs.",
+      "risk": "red"
+    },
+    {
+      "clause": "Bank's Unconditional Right to Cancel Undrawn Loan (Clause 4.1)",
+      "explanation": "The bank can cancel any part of your loan that has not yet been given to you, at any time, for any reason, without telling you beforehand.",
+      "reason": "This means you cannot rely on the full sanctioned loan amount, which could leave you in a difficult financial situation.",
+      "risk": "yellow"
+    },
+    {
+      "clause": "Bank's Rights to Revise Repayment/Terms (Clause 8a, 8b)",
+      "explanation": "The bank has the sole right to change your repayment schedule, amounts, interest rates (including penal rates), and how interest is calculated.",
+      "reason": "This clause gives the bank absolute power to unilaterally change fundamental terms of your loan, making your repayment obligations highly unstable.",
+      "risk": "red"
+    },
+    {
+      "clause": "Repayment - Joint and Several Liability/Group Guarantee (Clause 6.4, 6.5)",
+      "explanation": "If you are part of a Group Guarantee, you are individually responsible for the entire loan amount of the group, not just your share.",
+      "reason": "If others in your group fail to pay, the bank can pursue you for their share of the debt, putting your personal finances at extreme risk.",
+      "risk": "red"
+    },
+    {
+      "clause": "Additional/Alternate Security (Clause 7)",
+      "explanation": "If the value of your current security goes down, the bank can demand more security from you within 30 days.",
+      "reason": "If property values drop, you might be forced to provide more assets as security, increasing your potential losses if you default.",
+      "risk": "yellow"
+    },
+    {
+      "clause": "Events of Default and Enforcement of Security (Clause 10A)",
+      "explanation": "If any Event of Default occurs, the bank can immediately demand all outstanding loan amounts and enforce the security you provided. The bank alone decides if a default has occurred.",
+      "reason": "This gives the bank broad powers to declare a default and immediately initiate foreclosure, with no room to dispute their decision.",
+      "risk": "red"
+    }
+  ],
+  "extracted": {
+    "additional_interest_percent": 24,
+    "interest_rate": 12.5,
+    "loan_type": "home_loan",
+    "prepayment_lockin_months": 12,
+    "processing_fee_percent": 2.5,
+    "risk_patterns": {
+      "aggressive_recovery": true,
+      "broad_indemnity": true,
+      "daily_compounding": false,
+      "data_sharing_without_limit": false,
+      "increased_cost_transfer": false,
+      "loan_transfer_without_consent": true,
+      "no_grace_period": true,
+      "no_notice_on_default": false,
+      "security_demand_on_unsecured_loan": true,
+      "statement_conclusive": true,
+      "unilateral_lender_power": true,
+      "variable_interest_without_cap": true
+    }
+  },
+  "fairness": {
+    "classification": {
+      "color": "red",
+      "label": "Potentially Predatory",
+      "max": 39,
+      "min": 0
+    },
+    "fairness_score": 12,
+    "major_risks": [
+      "Lender can raise interest rate at any time without a stated upper limit",
+      "Wording allows lender to take legal or recovery action without prior notice",
+      "Lender can modify terms, demand security, or accelerate repayment at sole discretion",
+      "Default penalties apply immediately with no grace period after missed payment",
+      "Borrower must cover lender's legal costs and losses in almost any scenario"
+    ],
+    "market_comparison": {
+      "interest_rate": {
+        "loan_value": 12.5,
+        "typical_range": "8.5-10.5%"
+      },
+      "processing_fee": {
+        "loan_value": 2.5,
+        "typical_range": "0-2.0%"
+      }
+    }
+  }
+}
