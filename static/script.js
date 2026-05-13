@@ -170,7 +170,7 @@ function escapeHtml(str) {
 // RENDER RESULTS
 // ─────────────────────────────────────────────
 
-function renderResults(clauses, fairness) {
+function renderResults(clauses, fairness, extracted = {}) {
   console.log('renderResults fired — clauses:', clauses?.length, 'score:', fairness?.fairness_score);
   try {
   const sorted = sortClauses(clauses);
@@ -380,7 +380,7 @@ async function runAnalysis() {
 
     currentClauses = clauses;
     console.log('About to call renderResults...');
-    renderResults(clauses, fairness);
+    renderResults(clauses, fairness, result.extracted);
 
   } catch (e) {
     showError(e.message);
@@ -491,4 +491,52 @@ function runCalc() {
 
   document.getElementById('calcResults').style.display = 'block';
   document.getElementById('calcResults').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function fillCalculator(extracted, slot = 'A') {
+  const p = slot === 'A' ? 'calcPrincipalA' : 'calcPrincipalB';
+  const r = slot === 'A' ? 'calcRateA'      : 'calcRateB';
+  const t = slot === 'A' ? 'calcTenureA'    : 'calcTenureB';
+
+  // principal — use a sensible default if not in doc
+  document.getElementById(p).value = 4000000;
+
+  if (extracted?.interest_rate)
+    document.getElementById(r).value = extracted.interest_rate;
+
+  // tenure — default 20yr for home loans, 5yr for personal
+  const defaultTenure = extracted?.loan_type === 'home_loan' ? 20 : 5;
+  document.getElementById(t).value = defaultTenure;
+}
+
+let calcSlot = 'A';
+
+async function loadDemo(docId) {
+  clearAll();
+  setLoading(true);
+  
+  await new Promise(r => setTimeout(r, 2000));
+  
+  try {
+    const res = await fetch(`/demo/${docId}`);
+    const result = await res.json();
+    
+    const clauses = Array.isArray(result.clauses) ? result.clauses : [];
+    const fairness = result.fairness ?? {
+      fairness_score: 0,
+      classification: { label: 'Unknown' },
+      market_comparison: { interest_rate: {}, processing_fee: {} },
+      major_risks: []
+    };
+    
+    currentClauses = clauses;
+    renderResults(clauses, fairness, result.extracted);
+    fillCalculator(result.extracted, calcSlot);
+    calcSlot = calcSlot === 'A' ? 'B' : 'A'; // toggle for next click
+    
+  } catch(e) {
+    showError('Could not load demo document.');
+  } finally {
+    setLoading(false);
+  }
 }
