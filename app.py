@@ -387,6 +387,56 @@ def analyze():
             "error": f"Server error: {str(e)}"
         }), 500
 
+@app.route("/api/translate-clauses", methods=["POST"])
+def translate_clauses():
+
+    data = request.get_json()
+
+    clauses = data.get("clauses", [])
+    language = data.get("language", "English")
+
+    if not clauses:
+        return jsonify({
+            "error": "No clauses provided."
+        }), 400
+
+    prompt = f"""
+Translate the following loan analysis JSON into {language}.
+
+IMPORTANT:
+- Translate:
+  - clause
+  - explanation
+  - reason
+
+- DO NOT translate:
+  - risk values
+  - clause numbers
+  - percentages
+  - JSON structure
+
+Return ONLY valid JSON.
+"""
+
+    try:
+
+        translated_raw = call_gemini(
+            prompt,
+            json.dumps(clauses, ensure_ascii=False)
+        )
+
+        translated = parse_json(translated_raw)
+
+        return jsonify({
+            "clauses": translated
+        })
+
+    except Exception as e:
+
+        return jsonify({
+            "error": str(e)
+        }), 500
+
 @app.route('/demo/<doc_id>')
 def demo_doc(doc_id):
     allowed = ['sbm_home_loan', 'hdfc_home_loan', 'bajaj_personal_loan']

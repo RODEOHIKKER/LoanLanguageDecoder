@@ -3,6 +3,8 @@ pdfjsLib.GlobalWorkerOptions.workerSrc =
 
 let selectedFile = null;
 let currentClauses = [];
+let originalDemoClauses = [];
+let currentFairness = null;
 
 // ─────────────────────────────────────────────
 // FILE HANDLING
@@ -36,6 +38,8 @@ async function loadDemo(docId) {
     };
     
     currentClauses = clauses;
+    originalDemoClauses = clauses;
+    currentFairness = fairness;
     renderResults(clauses, fairness);
   } catch(e) {
     showError('Could not load demo document.');
@@ -223,6 +227,9 @@ function renderResults(clauses, fairness, extracted = {}) {
   document.getElementById('fairnessLabel').textContent =
     fairness?.classification?.label ?? 'Unknown';
 
+    // inside renderResults(), after fairness panel rendering:
+  renderBankComparison(fairness);
+
   // Null-safe market comparison
   const ir = fairness?.market_comparison?.interest_rate ?? {};
   const pf = fairness?.market_comparison?.processing_fee ?? {};
@@ -379,6 +386,8 @@ async function runAnalysis() {
     }
 
     currentClauses = clauses;
+    originalDemoClauses = clauses;
+    currentFairness = fairness;
     console.log('About to call renderResults...');
     renderResults(clauses, fairness, result.extracted);
 
@@ -393,34 +402,44 @@ async function runAnalysis() {
 // LANGUAGE RE-RUN
 // ─────────────────────────────────────────────
 
-document.getElementById('langSelect').addEventListener('change', async function () {
-  if (currentClauses.length === 0) return;
-
-  let text = document.getElementById('loanText').value.trim();
-  if (selectedFile && !text) {
-    text = await extractTextFromPDF(selectedFile).catch(() => '');
-  }
-  if (!text) return;
+document.getElementById('langSelect')
+.addEventListener('change', async function () {
 
   const language = this.value;
+
+  // nothing loaded yet
+  if (!currentClauses.length) return;
+
   setLoading(true);
 
   try {
-    const result = await analyzeLoan(text, language);
+
+    // translate existing clauses
+    const translated =
+      await translateClauses(
+        originalDemoClauses,
+        language
+      );
+
+    currentClauses = translated;
+
     renderResults(
-      Array.isArray(result.clauses) ? result.clauses : [],
-      result.fairness ?? {
-        fairness_score: 0,
-        classification: { label: 'Unknown' },
-        market_comparison: { interest_rate: {}, processing_fee: {} },
-        major_risks: []
-      }
+      translated,
+      currentFairness
     );
-  } catch (e) {
-    showError(e.message);
+
+  } catch(e) {
+
+    console.error(e);
+
+    showError('Translation failed.');
+
   } finally {
+
     setLoading(false);
+
   }
+
 });
 
 // ─────────────────────────────────────────────
@@ -539,4 +558,113 @@ async function loadDemo(docId) {
   } finally {
     setLoading(false);
   }
+}
+
+function showPage(page) {
+
+  document.querySelectorAll('.page').forEach(p => {
+    p.classList.remove('active');
+  });
+
+  document.querySelectorAll('.nav-btn').forEach(btn => {
+    btn.classList.remove('active');
+  });
+
+  document.getElementById(`page-${page}`)
+    .classList.add('active');
+
+  document.querySelector(`[data-page="${page}"]`)
+    .classList.add('active');
+
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  });
+}
+
+async function translateClauses(clauses, language) {
+
+  const response = await fetch('/api/translate-clauses', {
+
+    method: 'POST',
+
+    headers: {
+      'Content-Type': 'application/json'
+    },
+
+    body: JSON.stringify({
+      clauses,
+      language
+    })
+
+  });
+
+  const data = await response.json();
+
+  if (!response.ok || data.error) {
+    throw new Error(data.error || 'Translation failed');
+  }
+
+  return data.clauses;
+}
+
+// ─────────────────────────────────────────────
+// BANK COMPARISON PANEL
+// ─────────────────────────────────────────────
+
+function renderBankComparison(fairness) {
+  const panel    = document.getElementById('bankComparisonPanel');
+  const tbody    = document.getElementById('bankTableRows');
+  const banks    = fairness?.bank_comparison ?? [];
+  const yourRate = fairness?.market_comparison?.interest_rate?.loan_value;
+  const rbiNote  = fairness?.market_comparison?.interest_rate?.rbi_note ?? '';
+  const label    = fairness?.loan_type_label ?? 'Loan';
+
+  if (!banks.length) { panel.style.display = 'none'; return; }
+
+  document.getElementById('bankPanelSubtitle').textContent =
+    `Your ${label} vs similar lenders in the market`;
+
+  const yourRateEl = document.getElementById('bankYourRate');
+  if (yourRate != null) {
+    const cheaperCount = banks.filter(b => b.rate_diff > 0).length;
+    let cls, text;
+    if (cheaperCount === banks.length) {
+      cls = 'above-market'; text = `Your rate (${yourRate}%) is above all compared lenders`;
+    } else if (cheaperCount === 0) {
+      cls = 'below-market'; text = `Your rate (${yourRate}%) is competitive vs market`;
+    } else {
+      cls = 'at-market';
+      text = `Your rate (${yourRate}%) is costlier than ${cheaperCount} of ${banks.length} lenders`;
+    }
+    yourRateEl.innerHTML = `<span class="your-rate-badge ${cls}">${text}</span>`;
+  }
+
+  tbody.innerHTML = banks.map(b => {
+    const diff = b.rate_diff;
+    let pillClass, pillText;
+    if (diff > 0.5) {
+      pillClass = 'expensive'; pillText = `+${diff.toFixed(2)}% costlier`;
+    } else if (diff < -0.5) {
+      pillClass = 'cheaper';   pillText = `${Math.abs(diff).toFixed(2)}% cheaper`;
+    } else {
+      pillClass = 'neutral';   pillText = 'Similar rate';
+    }
+    return `
+      <div class="bank-table-row">
+        <span class="bank-name-cell">${escapeHtml(b.bank)}</span>
+        <span class="bank-rate-cell">${escapeHtml(b.rate_range)}</span>
+        <span class="bank-fee-cell">${escapeHtml(b.processing_fee)}</span>
+        <span><span class="rate-diff-pill ${pillClass}">${pillText}</span></span>
+        <span class="bank-notes-cell">${escapeHtml(b.notes)}</span>
+      </div>
+    `;
+  }).join('');
+
+  if (rbiNote) {
+    const noteEl = document.getElementById('bankRbiNote');
+    if (noteEl) noteEl.textContent = `ℹ ${rbiNote}`;
+  }
+
+  panel.style.display = 'block';
 }
