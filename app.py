@@ -182,12 +182,14 @@ def parse_json(raw):
 
 def calculate_fairness(extracted):
 
-    scoring = PERSONAL_LOAN["scoring"]
+    loan_type_key = extracted.get("loan_type", "personal_loan")
+    benchmark = BENCHMARKS.get(loan_type_key, PERSONAL_LOAN)
+
+    scoring = benchmark["scoring"]
 
     score = scoring["starting_score"]
 
     major_risks = []
-
     # ── Interest rate scoring ──
     interest = extracted.get("interest_rate")
 
@@ -249,8 +251,7 @@ def calculate_fairness(extracted):
     # ── Risk pattern scoring ──
     risk_patterns = extracted.get("risk_patterns", {})
 
-    penalties = PERSONAL_LOAN["risk_pattern_penalties"]
-
+    penalties = benchmark["risk_pattern_penalties"]
     for pattern, active in risk_patterns.items():
 
         if active and pattern in penalties:
@@ -278,20 +279,22 @@ def calculate_fairness(extracted):
         "fairness_score": score,
         "classification": classification,
         "major_risks": major_risks[:5],
+        "better_deals": benchmark.get("better_deals", []),
+        "loan_type_label": benchmark.get("label", "Loan"),
 
         "market_comparison": {
             "interest_rate": {
                 "loan_value": interest,
                 "typical_range": (
-                    f"{PERSONAL_LOAN['interest_rate']['typical_low']}"
-                    f"-{PERSONAL_LOAN['interest_rate']['typical_high']}%"
+                    f"{benchmark['interest_rate']['typical_low']}"
+                    f"-{benchmark['interest_rate']['typical_high']}%"
                 )
             },
 
             "processing_fee": {
                 "loan_value": processing_fee,
                 "typical_range": (
-                    f"0-{PERSONAL_LOAN['processing_fee']['typical_percent']}%"
+                    f"0-{benchmark['processing_fee']['typical_percent']}%"
                 )
             }
         }
@@ -443,7 +446,10 @@ def demo_doc(doc_id):
     if doc_id not in allowed:
         return jsonify({'error': 'not found'}), 404
     with open(f'data/{doc_id}.json') as f:
-        return jsonify(json.load(f))
+        data = json.load(f)
+    if 'extracted' in data:
+        data['fairness'] = calculate_fairness(data['extracted'])
+    return jsonify(data)
 
 
 if __name__ == "__main__":

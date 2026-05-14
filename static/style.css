@@ -1080,3 +1080,56 @@ textarea:focus { border-color: rgba(232,184,75,0.4); }
 .rate-diff-pill.cheaper  { background: rgba(74,222,128,0.12); color: #4ade80; border: 1px solid rgba(74,222,128,0.25); }
 .rate-diff-pill.expensive{ background: rgba(248,113,113,0.12); color: #f87171; border: 1px solid rgba(248,113,113,0.25); }
 .rate-diff-pill.neutral  { background: rgba(251,191,36,0.12);  color: #fbbf24; border: 1px solid rgba(251,191,36,0.25); }
+
+/* ══════════════════════════════
+   BETTER DEALS PANEL
+══════════════════════════════ */
+.better-deals-panel {
+  background: rgba(74,222,128,0.06);
+  border: 1px solid rgba(74,222,128,0.25);
+  border-radius: 20px;
+  padding: 1.5rem 2rem;
+  margin-bottom: 1.5rem;
+}
+.better-deals-header {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 1.25rem;
+}
+.better-deals-icon { font-size: 22px; }
+.better-deals-title {
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: #4ade80; margin-bottom: 0.2rem;
+}
+.better-deals-sub {
+  font-size: 13px; color: var(--text-muted);
+}
+.better-deals-head-row {
+  display: grid;
+  grid-template-columns: 1.5fr 0.8fr 1fr 2fr;
+  padding: 8px 12px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 10px 10px 0 0;
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--text-muted);
+}
+.deal-row {
+  display: grid;
+  grid-template-columns: 1.5fr 0.8fr 1fr 2fr;
+  padding: 11px 12px;
+  border: 1px solid rgba(255,255,255,0.04);
+  border-top: none;
+  font-size: 13px; align-items: center;
+  transition: background 0.15s;
+}
+.deal-row:last-child { border-radius: 0 0 10px 10px; }
+.deal-row:hover { background: rgba(74,222,128,0.04); }
+.deal-bank { font-weight: 700; color: var(--cream); }
+.deal-rate {
+  font-family: 'Playfair Display', serif;
+  font-weight: 700; color: #4ade80;
+}
+.deal-fee { color: var(--text-muted); font-size: 12px; }
+.deal-highlight { color: var(--text-muted); font-size: 12px; font-style: italic; }

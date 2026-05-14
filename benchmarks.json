@@ -1,5 +1,12 @@
 {
   "personal_loan": {
+    "better_deals": [
+  { "bank": "Bank of Maharashtra", "rate": "8.75%", "processing_fee": "up to 1%", "highlight": "Lowest rate for salaried" },
+  { "bank": "Union Bank of India",  "rate": "8.75%", "processing_fee": "up to 1%", "highlight": "PSU bank, stable terms" },
+  { "bank": "Canara Bank",          "rate": "9.70%", "processing_fee": "up to 0.5%", "highlight": "Low processing fee" },
+  { "bank": "HDFC Bank",            "rate": "9.99%", "processing_fee": "up to ₹6,500", "highlight": "Fast disbursal" },
+  { "bank": "Axis Bank",            "rate": "9.99%", "processing_fee": "up to 2%", "highlight": "Flexible tenure" }
+],
     "interest_rate": {
       "min": 8.75,
       "max": 18.00,

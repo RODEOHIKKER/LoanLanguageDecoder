@@ -41,6 +41,7 @@ async function loadDemo(docId) {
     originalDemoClauses = clauses;
     currentFairness = fairness;
     renderResults(clauses, fairness);
+    renderBetterDeals(fairness);
   } catch(e) {
     showError('Could not load demo document.');
   } finally {
@@ -390,6 +391,7 @@ async function runAnalysis() {
     currentFairness = fairness;
     console.log('About to call renderResults...');
     renderResults(clauses, fairness, result.extracted);
+    renderBetterDeals(fairness);
 
   } catch (e) {
     showError(e.message);
@@ -549,9 +551,11 @@ async function loadDemo(docId) {
     };
     
     currentClauses = clauses;
+    currentFairness = fairness;
     renderResults(clauses, fairness, result.extracted);
+    renderBetterDeals(fairness);
     fillCalculator(result.extracted, calcSlot);
-    calcSlot = calcSlot === 'A' ? 'B' : 'A'; // toggle for next click
+    calcSlot = calcSlot === 'A' ? 'B' : 'A';
     
   } catch(e) {
     showError('Could not load demo document.');
@@ -665,6 +669,35 @@ function renderBankComparison(fairness) {
     const noteEl = document.getElementById('bankRbiNote');
     if (noteEl) noteEl.textContent = `ℹ ${rbiNote}`;
   }
+
+  panel.style.display = 'block';
+}
+
+// ─────────────────────────────────────────────
+// BETTER DEALS PANEL
+// ─────────────────────────────────────────────
+
+function renderBetterDeals(fairness) {
+  const panel = document.getElementById('betterDealsPanel');
+  const deals = fairness?.better_deals ?? [];
+  const yourRate = fairness?.market_comparison?.interest_rate?.loan_value;
+
+  if (!deals.length) { panel.style.display = 'none'; return; }
+
+  const betterDeals = yourRate != null
+    ? deals.filter(d => parseFloat(d.rate) < yourRate)
+    : deals;
+
+  if (!betterDeals.length) { panel.style.display = 'none'; return; }
+
+  document.getElementById('betterDealsRows').innerHTML = betterDeals.map(d => `
+    <div class="deal-row">
+      <span class="deal-bank">${escapeHtml(d.bank)}</span>
+      <span class="deal-rate">${escapeHtml(d.rate)}</span>
+      <span class="deal-fee">${escapeHtml(d.processing_fee)}</span>
+      <span class="deal-highlight">${escapeHtml(d.highlight)}</span>
+    </div>
+  `).join('');
 
   panel.style.display = 'block';
 }
